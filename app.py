@@ -3,7 +3,7 @@ import pandas as pd
 import joblib
 
 # Load your trained model (update path if needed)
-model = joblib.load("transport_delay_model.pkl")
+classifier_model = joblib.load("transport_delay_model.pkl")
 
 st.title("🚍 Public Transport Delay Prediction")
 
@@ -33,11 +33,11 @@ year = st.number_input("Year", min_value=2023, max_value=2030, value=2023)
 month = st.slider("Month", 1, 12, 2)
 day = st.slider("Day", 1, 31, 5)
 hour = st.slider("Hour", 0, 23, 8)
-minute = int(input("Enter Minute (0–59): "))
-scheduled_departure_hour = int(input("Enter Scheduled Departure Hour (0–23): "))
-scheduled_departure_minute = int(input("Enter Scheduled Departure Minute (0–59): "))
-scheduled_arrival_hour = int(input("Enter Scheduled Arrival Hour (0–23): "))
-scheduled_arrival_minute = int(input("Enter Scheduled Arrival Minute (0–59): "))
+minute = st.number_input("Enter Minute (0–59): ", min_value=0, max_value=59, value=30)
+scheduled_departure_hour = st.number_input("Enter Scheduled Departure Hour (0–23): ", min_value=0, max_value=23, value=8)
+scheduled_departure_minute = st.number_input("Enter Scheduled Departure Minute (0–59): ", min_value=0, max_value=59, value=30)
+scheduled_arrival_hour = st.number_input("Enter Scheduled Arrival Hour (0–23): ", min_value=0, max_value=23, value=9)
+scheduled_arrival_minute = st.number_input("Enter Scheduled Arrival Minute (0–59): ", min_value=0, max_value=59, value=30)
 
 # Categorical inputs
 transport_type = st.selectbox("Transport Type", ["Bus", "Train", "Tram", "Metro"])
@@ -65,7 +65,6 @@ unseen_row = pd.DataFrame([{
     "month": month,
     "day": day,
     "hour": hour,
-    
 
     # Transport type one-hot
     "transport_type_Metro": 1 if transport_type=="Metro" else 0,
@@ -101,9 +100,10 @@ unseen_row = pd.DataFrame([{
 }])
 
 # Predict button
-if st.button("Predict Delay"):
-    pred = model.predict(unseen_row)[0]
+if st.button("Predict Delay or No Delay"):
+    pred = classifier_model.predict(unseen_row)[0]
     if pred == 0:
         st.success("✅ Prediction: No Delay")
     else:
         st.error("⚠️ Prediction: Delay")
+
