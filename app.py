@@ -33,6 +33,11 @@ year = st.number_input("Year", min_value=2023, max_value=2030, value=2023)
 month = st.slider("Month", 1, 12, 2)
 day = st.slider("Day", 1, 31, 5)
 hour = st.slider("Hour", 0, 23, 8)
+minute = int(input("Enter Minute (0–59): "))
+scheduled_departure_hour = int(input("Enter Scheduled Departure Hour (0–23): "))
+scheduled_departure_minute = int(input("Enter Scheduled Departure Minute (0–59): "))
+scheduled_arrival_hour = int(input("Enter Scheduled Arrival Hour (0–23): "))
+scheduled_arrival_minute = int(input("Enter Scheduled Arrival Minute (0–59): "))
 
 # Categorical inputs
 transport_type = st.selectbox("Transport Type", ["Bus", "Train", "Tram", "Metro"])
@@ -60,6 +65,7 @@ unseen_row = pd.DataFrame([{
     "month": month,
     "day": day,
     "hour": hour,
+    
 
     # Transport type one-hot
     "transport_type_Metro": 1 if transport_type=="Metro" else 0,
@@ -87,11 +93,11 @@ unseen_row = pd.DataFrame([{
 
     # Time features
     "time_hour": hour,
-    "time_minute": 0,
-    "scheduled_departure_hour": hour,
-    "scheduled_departure_minute": 0,
-    "scheduled_arrival_hour": (hour+1)%24,
-    "scheduled_arrival_minute": 0
+    "time_minute": minute,
+    "scheduled_departure_hour": scheduled_departure_hour,
+    "scheduled_departure_minute": scheduled_departure_minute,
+    "scheduled_arrival_hour": scheduled_arrival_hour,
+    "scheduled_arrival_minute": scheduled_arrival_minute
 }])
 
 # Predict button
